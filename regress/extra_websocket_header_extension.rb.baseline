@@ -1,0 +1,44 @@
+################################################################################
+# Initiate a close from the client to the server                               #
+################################################################################
+
+Start websocket server
+Set a handler for receiving server connect and disconnect events
+Initiate a connection with an invalid request verb
+Client request:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+GET / HTTP/1.1
+Host: localhost:[WEBSOCKET_PORT]
+Connection: Upgrade
+Upgrade: websocket
+Sec-WebSocket-Version: 13
+Sec-WebSocket-Key: abcdefghijklmnopqrstuv==
+Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+Origin: localhost
+User-Agent: test-client
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Server has connected to a client
+Client path: /
+Client host: localhost:[WEBSOCKET_PORT]
+Client origin: localhost
+Close the socket
+Server has disconnected from a client
+Server response:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: bgAIe1Uyl8RkKSUGzScol17gp1Y=
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Stop websocket server
+
+################################################################################
+# Client and server logs:                                                      #
+################################################################################
+
+INFO    Listening on localhost:[WEBSOCKET_PORT]
+INFO    Additional WebSocket headers: Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+INFO    Received websocket key, establishing connection
+INFO    Stopping WebSocket server

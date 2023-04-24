@@ -1,0 +1,71 @@
+################################################################################
+# Client sends an unsupported opcode to the server                             #
+################################################################################
+
+Start websocket server
+Connect a client
+Sending invalid opcode: 3
+Waiting for client connection to close
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Connect a client
+Sending invalid opcode: 4
+Waiting for client connection to close
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Connect a client
+Sending invalid opcode: 5
+Waiting for client connection to close
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Connect a client
+Sending invalid opcode: 6
+Waiting for client connection to close
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Connect a client
+Sending invalid opcode: 7
+Waiting for client connection to close
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Connect a client
+Sending invalid opcode: 11
+Waiting for client connection to close
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Connect a client
+Sending invalid opcode: 12
+Waiting for client connection to close
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Connect a client
+Sending invalid opcode: 13
+Waiting for client connection to close
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Connect a client
+Sending invalid opcode: 14
+Waiting for client connection to close
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Connect a client
+Sending invalid opcode: 15
+Waiting for client connection to close
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+################################################################################
+# Client and server logs:                                                      #
+################################################################################
+
+INFO    Listening on localhost:[WEBSOCKET_PORT]
+INFO    Received websocket key, establishing connection
+ERROR   Unknown opcode: 3
+INFO    Received websocket key, establishing connection
+ERROR   Unknown opcode: 4
+INFO    Received websocket key, establishing connection
+ERROR   Unknown opcode: 5
+INFO    Received websocket key, establishing connection
+ERROR   Unknown opcode: 6
+INFO    Received websocket key, establishing connection
+ERROR   Unknown opcode: 7
+INFO    Received websocket key, establishing connection
+ERROR   Unknown opcode: 11
+INFO    Received websocket key, establishing connection
+ERROR   Unknown opcode: 12
+INFO    Received websocket key, establishing connection
+ERROR   Unknown opcode: 13
+INFO    Received websocket key, establishing connection
+ERROR   Unknown opcode: 14
+INFO    Received websocket key, establishing connection
+ERROR   Unknown opcode: 15

@@ -1,0 +1,15 @@
+################################################################################
+# Kill the client connecting during message transmission                       #
+################################################################################
+
+Start websocket server
+Server received text from client: 8192 B
+Server has disconnected from a client
+
+################################################################################
+# Client and server logs:                                                      #
+################################################################################
+
+INFO    Listening on localhost:[WEBSOCKET_PORT]
+INFO    Received websocket key, establishing connection
+INFO    Payload size: 8192 B

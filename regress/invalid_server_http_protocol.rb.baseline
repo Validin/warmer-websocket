@@ -1,0 +1,39 @@
+################################################################################
+# Server responds to a normal request with unsupported HTTP protocol           #
+################################################################################
+
+Start the server by listening over TCP
+Connect a client
+Respond to an initiated request
+Client request:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+GET / HTTP/1.1
+Host: localhost:[WEBSOCKET_PORT]
+Connection: Upgrade
+Upgrade: websocket
+Sec-WebSocket-Version: 13
+Sec-WebSocket-Key: [WebSocket Request Key]
+Pragma: no-cache
+Cache-Control: no-cache
+User-Agent: WebSocket::Client
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Server response:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+HTTP/2.0 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: [WebSocket Response Key]
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Client exception raised during request:
+  RuntimeError: "Unsupported protocol: \"HTTP/2.0\""
+Close the socket
+
+################################################################################
+# Client and server logs:                                                      #
+################################################################################
+
+ERROR   Unsupported protocol: "HTTP/2.0"
+INFO    Client shutting down

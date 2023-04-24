@@ -1,0 +1,40 @@
+################################################################################
+# Initiate a close from the client to the server                               #
+################################################################################
+
+Start websocket server
+Set a handler for receiving server connect and disconnect events
+Initiate a connection with an invalid request verb
+
+Client request:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+GET / HTTP/1.1
+Host: localhost:[WEBSOCKET_PORT]
+Connection: Upgrade
+Upgrade: websocket
+Sec-WebSocket-Version: 14
+Sec-WebSocket-Key: abcdefghijklmnopqrstuv==
+User-Agent: test-client
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Server connected: false
+Close the socket
+
+Server response:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+HTTP/1.1 400 Bad Request
+Content-Type: text/html
+Content-Length: 52
+Connection: close
+
+Did not receive websocket version header value of 13
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Stop websocket server
+
+################################################################################
+# Client and server logs:                                                      #
+################################################################################
+
+INFO    Listening on localhost:[WEBSOCKET_PORT]
+WARN    Did not receive websocket version header value of 13
+INFO    Stopping WebSocket server

@@ -1,0 +1,27 @@
+################################################################################
+# Send a ping from the client to the server                                    #
+################################################################################
+
+Start websocket server
+Connect a client
+Set a handler for receiving pongs on the client
+Send a ping from the client to the server
+Received pong with Hello? as client
+################################################################################
+# Send a ping from the server to the client                                    #
+################################################################################
+
+Set a handler for receiving pongs on the server
+Received pong with ServerHello? as server
+Stop the client
+
+################################################################################
+# Client and server logs:                                                      #
+################################################################################
+
+INFO    Listening on localhost:[WEBSOCKET_PORT]
+INFO    Received websocket key, establishing connection
+INFO    Payload size: 6 B
+INFO    Payload size: 6 B
+INFO    Payload size: 12 B
+INFO    Payload size: 12 B
