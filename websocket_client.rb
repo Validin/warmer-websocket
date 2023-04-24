@@ -33,7 +33,9 @@ module WebSocket
   class Client
     require 'logger'
     require 'socket'
+    require 'digest'
     require 'securerandom'
+    require 'stringio'
 
     OPCODES = {
       0 => :continuation,
