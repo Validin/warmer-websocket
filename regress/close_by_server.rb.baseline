@@ -1,0 +1,22 @@
+################################################################################
+# Initiate a close from the server to the client                               #
+################################################################################
+
+Start websocket server
+Set a handler for receiving close events from the server
+Connect a client
+Set a handler for receiving close events from the client
+Received close with "" as client
+Received close with "" as server
+Stop websocket server
+
+################################################################################
+# Client and server logs:                                                      #
+################################################################################
+
+INFO    Listening on localhost:[WEBSOCKET_PORT]
+INFO    Received websocket key, establishing connection
+INFO    Payload size: 0 B
+INFO    Payload size: 0 B
+INFO    Payload size: 0 B
+INFO    Stopping WebSocket server

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Minimal Websocket Demo</title>
+</head>
+<body>
+  <h2>WebSocket Demo</h2>
+  <a href="https://html.spec.whatwg.org/multipage/web-sockets.html">WHATWG HTML WebSocket Spec</a>
+  <br />
+  <a href="https://www.w3.org/TR/websockets/">W3C WebSocket API (Latest Published)</a>
+  <div id="messages" style="font-family: monospace; border: 2px solid teal;">
+  </div>
+  <script>
+    // append messages to this element
+    var messageBox = document.querySelector("#messages");
+
+    // this opens a WebSocket from the browser to the given endpoint
+    var socket = new WebSocket("ws://localhost:4568");
+
+    // when the socket is opened successfully
+    socket.onopen = function(event) {
+      var message = 'Hello?'
+      socket.send(message);
+      messageBox.insertAdjacentHTML('beforeend', "<div>&lt; " + message + "</div>")
+    };
+
+    // when a message is received from the server
+    socket.onmessage = function(event) {
+      var message = event.data;
+      messageBox.insertAdjacentHTML('beforeend', "<div>&gt; " + message + "</div>")
+    };
+
+    // when there is an error
+    socket.onerror = function(event) {
+      messageBox.insertAdjacentHTML('beforeend', "<div><strong>--Error--</strong></div>")
+    };
+
+    // when the socket is closed
+    socket.onclose = function(event) {
+      messageBox.insertAdjacentHTML('beforeend', "<div><em>Closed</em></div>")
+    };
+  </script>
+</body>
+</html>

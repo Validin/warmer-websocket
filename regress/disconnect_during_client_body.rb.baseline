@@ -1,0 +1,35 @@
+################################################################################
+# Kill the client connecting during message transmission                       #
+################################################################################
+
+Start websocket server
+
+Close after mask
+Server has disconnected from a client
+
+Close after first body byte
+Server has disconnected from a client
+
+Close before last body byte
+Server has disconnected from a client
+
+Close immediately after last body byte
+Server received text from client: "hi!"
+Server has disconnected from a client
+
+################################################################################
+# Client and server logs:                                                      #
+################################################################################
+
+INFO    Listening on localhost:[WEBSOCKET_PORT]
+INFO    Received websocket key, establishing connection
+INFO    Payload size: 3 B
+ERROR   Socket closed unexpectedly during message transfer
+INFO    Received websocket key, establishing connection
+INFO    Payload size: 3 B
+ERROR   Socket closed unexpectedly during message transfer
+INFO    Received websocket key, establishing connection
+INFO    Payload size: 3 B
+ERROR   Socket closed unexpectedly during message transfer
+INFO    Received websocket key, establishing connection
+INFO    Payload size: 3 B

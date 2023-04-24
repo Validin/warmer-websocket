@@ -1,0 +1,30 @@
+################################################################################
+# Client sends an invalid continuation frame                                   #
+################################################################################
+
+Start websocket server
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Connect a client
+Continuation, no payload, FIN set
+Waiting for client connection to close
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Connect a client
+Continuation, no payload, FIN NOT set
+Waiting for client connection to close
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Connect a client
+Continuation, with payload, FIN set
+Waiting for client connection to close
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+################################################################################
+# Client and server logs:                                                      #
+################################################################################
+
+INFO    Listening on localhost:[WEBSOCKET_PORT]
+INFO    Received websocket key, establishing connection
+ERROR   Received invalid continuation frame
+INFO    Received websocket key, establishing connection
+ERROR   Received invalid continuation frame
+INFO    Received websocket key, establishing connection
+ERROR   Received invalid continuation frame

@@ -1,0 +1,49 @@
+################################################################################
+# Kill the client connecting during client frame header transmission           #
+################################################################################
+
+Start websocket server
+
+Close after opcode
+Server has disconnected from a client
+
+Close between short and long length fields
+Server has disconnected from a client
+
+Close during long length
+Server has disconnected from a client
+
+Close between long length and mask
+Server has disconnected from a client
+
+Close between short length and mask fields
+Server has disconnected from a client
+
+Close during mask
+Server has disconnected from a client
+
+Close after mask
+Server has disconnected from a client
+
+################################################################################
+# Client and server logs:                                                      #
+################################################################################
+
+INFO    Listening on localhost:[WEBSOCKET_PORT]
+INFO    Received websocket key, establishing connection
+INFO    Received websocket key, establishing connection
+ERROR   Socket closed unexpectedly during length transfer
+INFO    Received websocket key, establishing connection
+ERROR   Socket closed unexpectedly during length transfer
+INFO    Received websocket key, establishing connection
+INFO    Payload size: 65535 B
+ERROR   Socket closed unexpectedly during mask transfer
+INFO    Received websocket key, establishing connection
+INFO    Payload size: 1 B
+ERROR   Socket closed unexpectedly during mask transfer
+INFO    Received websocket key, establishing connection
+INFO    Payload size: 1 B
+ERROR   Socket closed unexpectedly during mask transfer
+INFO    Received websocket key, establishing connection
+INFO    Payload size: 1 B
+ERROR   Socket closed unexpectedly during message transfer

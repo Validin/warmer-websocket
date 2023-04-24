@@ -1,0 +1,22 @@
+################################################################################
+# Client and server both send text payloads of 1025B                           #
+################################################################################
+
+Start websocket server
+Set a handler for receiving text on the server
+Connect a client
+Set a handler for receiving text on the client
+Send text from the client to the server
+Server message matches? true
+Send text from the server back to the client
+Client message matches? true
+Stop the client
+
+################################################################################
+# Client and server logs:                                                      #
+################################################################################
+
+INFO    Listening on localhost:[WEBSOCKET_PORT]
+INFO    Received websocket key, establishing connection
+INFO    Payload size: 1025 B
+INFO    Payload size: 1025 B
