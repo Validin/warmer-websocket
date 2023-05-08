@@ -13,6 +13,9 @@ class Harness
   def initialize(opts = {})
     @port = opts[:port] || 9881
     @host = opts[:host] || 'localhost'
+    @ssl = opts[:ssl] || false
+    @cert = opts[:ssl_cert]
+    @key = opts[:ssl_key]
     @websocket_log = StringIO.new
     @log_mutex = Mutex.new
   end
@@ -35,6 +38,9 @@ class Harness
       port: @port,
       host: @host,
       logger: make_logger,
+      ssl: @ssl,
+      ssl_cert: @cert,
+      ssl_key: @key
     }
     @socket_server = WebSocket::Server.new(options)
     @socket_server.run!
