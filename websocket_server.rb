@@ -37,6 +37,7 @@
 module WebSocket
   class Server
     require 'socket'
+    require 'openssl'
     require 'logger'
     require 'digest'
     require_relative 'websocket_client'
@@ -54,11 +55,16 @@ module WebSocket
       @host = opts[:host]
       @port = opts[:port]
       @logger = opts[:logger]
+      @ssl = opts[:ssl]
+      @ssl_key = opts[:ssl_key]
+      @ssl_cert = opts[:ssl_cert]
       @client_handlers = Hash.new{|h, v| h[v] = []}
       @server_handlers = Hash.new{|h, v| h[v] = []}
       @clients = {}
       @client_mutex = Mutex.new
       @server = nil
+      @socket = nil
+      @ctx = nil
       unless @logger
         @logger = Logger.new(STDOUT)
         @logger.level = Logger::WARN
@@ -85,6 +91,7 @@ module WebSocket
       start_server!
       @server_thread = Thread.new do
         loop do
+          # TODO handle OpenSSL::SSL::SSLError on SSL client accept from non-SSL client
           Thread.start(@server.accept) do |socket|
             begin
               handle_request(socket)
@@ -116,6 +123,7 @@ module WebSocket
       end
       @server_thread.kill if @server_thread
       @server.close
+      @socket.close unless @socket.nil?
     end
 
     # Returns true only when the server is running
@@ -275,6 +283,18 @@ module WebSocket
     def start_server!
       @logger.info "Listening on #{@host}:#{@port}"
       @server = TCPServer.new(@host, @port)
+      if @ssl
+        @logger.info "Initializing SSL context"
+        raise "Must provide SSL key" if @ssl_key.nil?
+        raise "Must provide SSL certificate" if @ssl_cert.nil?
+
+        @socket = @server
+        @ctx = OpenSSL::SSL::SSLContext.new
+        @ctx.cert = OpenSSL::X509::Certificate.new(File.open(@ssl_cert))
+        @ctx.key = OpenSSL::PKey::RSA.new(File.open(@ssl_key))
+
+        @server = OpenSSL::SSL::SSLServer.new(@socket, @ctx)
+      end
     end
   end
 end
