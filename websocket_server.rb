@@ -94,6 +94,7 @@ module WebSocket
           # TODO handle OpenSSL::SSL::SSLError on SSL client accept from non-SSL client
           Thread.start(@server.accept) do |socket|
             begin
+              socket.accept if @ssl
               handle_request(socket)
             rescue => e
               @logger.error "#{e.class}: #{e.message}"
@@ -294,6 +295,7 @@ module WebSocket
         @ctx.key = OpenSSL::PKey::RSA.new(File.open(@ssl_key))
 
         @server = OpenSSL::SSL::SSLServer.new(@socket, @ctx)
+        @server.start_immediately = false
       end
     end
   end
