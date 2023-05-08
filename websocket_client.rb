@@ -365,6 +365,7 @@ module WebSocket
       logger = opts[:logger]
       origin = opts[:origin]
       ssl = opts[:ssl]
+      ssl_verify_mode = opts[:ssl_verify_mode]
       path = opts[:path] || '/'
       headers = opts[:headers] || []
       user_agent = opts[:user_agent] || 'WebSocket::Client'
@@ -373,7 +374,7 @@ module WebSocket
       socket = TCPSocket.new(host, port.to_i)
       if ssl
         ctx = OpenSSL::SSL::SSLContext.new
-        ctx.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        ctx.verify_mode = ssl_verify_mode.nil? ? OpenSSL::SSL::VERIFY_PEER : ssl_verify_mode
         ssocket = OpenSSL::SSL::SSLSocket.new(socket, ctx)
         ssocket.sync_close = true
         ssocket.connect

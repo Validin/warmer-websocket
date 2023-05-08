@@ -21,7 +21,7 @@ Harness.run_test(ssl: true,
   end
 
   log 'Connect a client'
-  client = connect_client(ssl: true)
+  client = connect_client(ssl: true, ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE)
   client.serve!
   log 'Set a handler for receiving text on the client'
   client.on(:text) do |_conn, payload|
