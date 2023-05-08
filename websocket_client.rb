@@ -208,13 +208,26 @@ module WebSocket
           payload_size = (len & 0x7f)
           if payload_size == 126
             # unpack as network-order 16-bit unsigned integer
-            payload_size = @socket.read(2).unpack('n').first
+            rawsize = @socket.read(2)
+            if rawsize.nil?
+              @logger.error 'Socket closed unexpectedly during length transfer'
+              @socket.close
+              break
+            end
+            payload_size = rawsize.unpack('n').first
           elsif payload_size == 127
             # unpack as two network-order 32-bit unsigned integers
-            size_words = @socket.read(8).unpack('NN')
+            rawsize = @socket.read(8)
+            if rawsize.nil?
+              @logger.error 'Socket closed unexpectedly during length transfer'
+              @socket.close
+              break
+            end
+            size_words = rawsize.unpack('NN')
             @logger.info size_words.inspect
             # append the integers for the full length
-            payload_size = (size_words[0] << 32) + size_words[1]
+            payload_size = nil
+            payload_size = (size_words[0] << 32) + size_words[1] unless size_words[0].nil? or size_words[1].nil?
           end
 
           # payload size can be nil when there otherwise aren't error when the
@@ -229,14 +242,18 @@ module WebSocket
           # If the 'MASK' bit was set, then 4 bytes are provided to the server
           # to be used as an XOR mask for incoming bytes
           # These bytes do *not* count against the payload size
-          mask = is_masked ? @socket.read(4).unpack('C*') : nil
+          mask = nil
+          if is_masked
+            rawmask = @socket.read(4)
+            mask = rawmask.unpack('C*') unless rawmask.nil?
 
-          # if the socket were closed during transmission, we may only
-          # have a partial mask
-          if is_masked && mask.length < 4
-            @logger.error 'Socket closed unexpectedly during mask transfer'
-            @socket.close
-            break
+            # if the socket were closed during transmission, we may only
+            # have a partial mask
+            if mask.nil? or mask.length < 4
+              @logger.error 'Socket closed unexpectedly during mask transfer'
+              @socket.close
+              break
+            end
           end
 
           # Receive the entire payload
