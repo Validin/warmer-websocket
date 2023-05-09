@@ -33,6 +33,7 @@ module WebSocket
   class Client
     require 'logger'
     require 'socket'
+    require 'openssl'
     require 'digest'
     require 'securerandom'
     require 'stringio'
@@ -62,6 +63,7 @@ module WebSocket
       @path = opts[:path]
       @host = opts[:host]
       @origin = opts[:origin]
+      @ssl = opts[:ssl]
 
       # sent to indicate that the connection is closing
       # the only time this should be true is when the server initiates
@@ -128,7 +130,7 @@ module WebSocket
 
           # The first two bytes in any frame always include the header byte
           # and the frame length
-          header, len = @socket.recv(2, Socket::MSG_WAITALL).unpack('C*') rescue nil
+          header, len = @socket.read(2).unpack('C*') rescue nil
           unless header && len
             @logger.debug 'Socket closed during frame header read'
             @socket.close
@@ -206,13 +208,26 @@ module WebSocket
           payload_size = (len & 0x7f)
           if payload_size == 126
             # unpack as network-order 16-bit unsigned integer
-            payload_size = @socket.recv(2, Socket::MSG_WAITALL).unpack('n').first
+            rawsize = @socket.read(2)
+            if rawsize.nil?
+              @logger.error 'Socket closed unexpectedly during length transfer'
+              @socket.close
+              break
+            end
+            payload_size = rawsize.unpack('n').first
           elsif payload_size == 127
             # unpack as two network-order 32-bit unsigned integers
-            size_words = @socket.recv(8, Socket::MSG_WAITALL).unpack('NN')
+            rawsize = @socket.read(8)
+            if rawsize.nil?
+              @logger.error 'Socket closed unexpectedly during length transfer'
+              @socket.close
+              break
+            end
+            size_words = rawsize.unpack('NN')
             @logger.info size_words.inspect
             # append the integers for the full length
-            payload_size = (size_words[0] << 32) + size_words[1]
+            payload_size = nil
+            payload_size = (size_words[0] << 32) + size_words[1] unless size_words[0].nil? or size_words[1].nil?
           end
 
           # payload size can be nil when there otherwise aren't error when the
@@ -227,14 +242,18 @@ module WebSocket
           # If the 'MASK' bit was set, then 4 bytes are provided to the server
           # to be used as an XOR mask for incoming bytes
           # These bytes do *not* count against the payload size
-          mask = is_masked ? @socket.recv(4, Socket::MSG_WAITALL).unpack('C*') : nil
+          mask = nil
+          if is_masked
+            rawmask = @socket.read(4)
+            mask = rawmask.unpack('C*') unless rawmask.nil?
 
-          # if the socket were closed during transmission, we may only
-          # have a partial mask
-          if is_masked && mask.length < 4
-            @logger.error 'Socket closed unexpectedly during mask transfer'
-            @socket.close
-            break
+            # if the socket were closed during transmission, we may only
+            # have a partial mask
+            if mask.nil? or mask.length < 4
+              @logger.error 'Socket closed unexpectedly during mask transfer'
+              @socket.close
+              break
+            end
           end
 
           # Receive the entire payload
@@ -248,7 +267,10 @@ module WebSocket
             # read the payload in chunks
             to_read = [1024, payload_remaining].min
 
-            data = @socket.recv(to_read, Socket::MSG_WAITALL).unpack('C*')
+            raw = @socket.read(to_read)
+            break if raw.nil?
+
+            data = raw.unpack('C*')
             payload_remaining -= data.length
 
             break unless data.length > 0
@@ -322,8 +344,8 @@ module WebSocket
 
       @closing = true if OPCODES[opcode] == :close
 
-      @socket.send(ws_header.string, 0)
-      @socket.send(payload, 0) unless payload.empty?
+      @socket.write(ws_header.string)
+      @socket.write(payload) unless payload.empty?
     end
 
     # Connect, as a client, to the given host:port and path
@@ -342,12 +364,22 @@ module WebSocket
     def self.connect(host, port, opts = {})
       logger = opts[:logger]
       origin = opts[:origin]
+      ssl = opts[:ssl]
+      ssl_verify_mode = opts[:ssl_verify_mode]
       path = opts[:path] || '/'
       headers = opts[:headers] || []
       user_agent = opts[:user_agent] || 'WebSocket::Client'
 
       # establish the TCPSocket connection
       socket = TCPSocket.new(host, port.to_i)
+      if ssl
+        ctx = OpenSSL::SSL::SSLContext.new
+        ctx.verify_mode = ssl_verify_mode.nil? ? OpenSSL::SSL::VERIFY_PEER : ssl_verify_mode
+        ssocket = OpenSSL::SSL::SSLSocket.new(socket, ctx)
+        ssocket.sync_close = true
+        ssocket.connect
+        socket = ssocket
+      end
 
       # generate the initial request to the TCP socket
       host_header = host
@@ -423,7 +455,7 @@ module WebSocket
       end
 
       self.new(socket,
-        path: path, host: host, origin: origin, is_client: true,
+        path: path, host: host, origin: origin, ssl: ssl, is_client: true,
         logger: logger,
       )
     end
