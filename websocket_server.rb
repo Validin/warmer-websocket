@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2017 Kenneth Kinion
+# Copyright (c) 2023 Kenneth Kinion
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -297,6 +297,7 @@ module WebSocket
         @server = OpenSSL::SSL::SSLServer.new(@socket, @ctx)
         @server.start_immediately = false
       end
+      loop { break unless @server.closed? }
     end
   end
 end

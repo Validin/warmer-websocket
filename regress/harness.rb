@@ -44,7 +44,6 @@ class Harness
     }
     @socket_server = WebSocket::Server.new(options)
     @socket_server.run!
-    Timeout::timeout(1) { @socket_server.running? }
     @socket_server
   end
 
