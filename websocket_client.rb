@@ -439,8 +439,8 @@ module WebSocket
             raise "Invalid HTTP message: #{msg.inspect}" if msg.nil? || msg.empty?
           end
         end
-        raise 'WebSocket Upgrade header not "websocket"' unless upgrade == 'websocket'
-        raise 'WebSocket Connection header not "Upgrade"' unless connection == 'Upgrade'
+        raise 'WebSocket Upgrade header not "websocket"' unless upgrade and upgrade.downcase == 'websocket'
+        raise 'WebSocket Connection header not "Upgrade"' unless connection and connection.downcase == 'upgrade'
         # validate the acceptance haeder
         response_to_hash = "#{websocket_key}258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
         websocket_accept = Digest::SHA1.base64digest(response_to_hash)
