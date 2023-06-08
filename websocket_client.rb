@@ -374,7 +374,7 @@ module WebSocket
       socket = TCPSocket.new(host, port.to_i)
       if ssl
         ctx = OpenSSL::SSL::SSLContext.new
-        ctx.verify_mode = ssl_verify_mode.nil? ? OpenSSL::SSL::VERIFY_PEER : ssl_verify_mode
+        ctx.verify_mode = ssl_verify_mode if ssl_verify_mode.nil?
         ssocket = OpenSSL::SSL::SSLSocket.new(socket, ctx)
         ssocket.sync_close = true
         ssocket.connect
