@@ -373,10 +373,15 @@ module WebSocket
       # establish the TCPSocket connection
       socket = TCPSocket.new(host, port.to_i)
       if ssl
+        cert_store = OpenSSL::X509::Store.new
+        cert_store.set_default_paths
         ctx = OpenSSL::SSL::SSLContext.new
-        ctx.verify_mode = ssl_verify_mode if ssl_verify_mode.nil?
+        ctx.verify_mode = ssl_verify_mode.nil? ? OpenSSL::SSL::VERIFY_PEER : ssl_verify_mode
+        ctx.verify_hostname = true
+        ctx.cert_store = cert_store
         ssocket = OpenSSL::SSL::SSLSocket.new(socket, ctx)
         ssocket.sync_close = true
+        ssocket.hostname = host
         ssocket.connect
         socket = ssocket
       end
