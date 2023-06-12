@@ -11,7 +11,7 @@ Harness.run_test do
   server = start_websocket_server
 
   log 'Set a handler for receiving text on the server'
-  server.on(:text) do |conn, payload|
+  server.on_text do |conn, payload|
     log "Received #{payload.string} as server"
     log 'Send text from the server back to the client'
     conn.send_frame(1, 'Hello!')
@@ -22,7 +22,7 @@ Harness.run_test do
   client = connect_client
   client.serve!
   log 'Set a handler for receiving text on the client'
-  client.on(:text) do |_conn, payload|
+  client.on_text do |_conn, payload|
     log "Received #{payload.string} as client"
     client_received = true
   end

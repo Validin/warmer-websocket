@@ -8,7 +8,7 @@ Harness.run_test do
   server_disconnected = false
   log 'Start websocket server'
   server = start_websocket_server
-  server.on(:client_disconnect) do |_client|
+  server.on_client_disconnect do |_client|
     log 'Server has disconnected from a client'
     server_disconnected = true
   end

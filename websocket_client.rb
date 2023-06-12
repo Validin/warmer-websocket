@@ -56,14 +56,20 @@ module WebSocket
     # @params Options include:
     #   :logger [Logger] to use for logging (defaults to STDOUT)
     #   :client [Boolean] true when acting as the client, not the server
-    def initialize(socket, opts = {})
+    def initialize(socket, opts = {}, logger: nil, is_client: nil, path: nil,
+                                      host: nil, origin: nil, ssl: nil,
+                                      handlers: nil)
       @socket = socket
-      @logger = opts[:logger] || Logger.new(STDOUT)
-      @is_client = opts[:is_client]
-      @path = opts[:path]
-      @host = opts[:host]
-      @origin = opts[:origin]
-      @ssl = opts[:ssl]
+      @logger = logger || opts[:logger]
+      unless @logger
+        @logger = Logger.new(STDOUT)
+        @logger.level = Logger::INFO
+      end
+      @is_client = is_client || opts[:is_client]
+      @path = path || opts[:path]
+      @host = host || opts[:host]
+      @origin = origin || opts[:origin]
+      @ssl = ssl || opts[:ssl]
 
       # sent to indicate that the connection is closing
       # the only time this should be true is when the server initiates
@@ -72,7 +78,7 @@ module WebSocket
       @previous_opcode = nil
       @serve_thread = nil
 
-      @handlers = opts[:handlers] || Hash.new {|h, v| h[v] = []}
+      @handlers = handlers || opts[:handlers] || Hash.new {|h, v| h[v] = []}
       @default_handlers = Hash.new {|h, v| h[v] = []}
       set_default_handlers
     end
@@ -87,6 +93,13 @@ module WebSocket
       func ||= block
       @handlers[action] << func
     end
+
+    # shortcuts
+    def on_text(func = nil, &block);   on(:text, func, &block)    end
+    def on_binary(func = nil, &block); on(:binary, func, &block)  end
+    def on_close(func = nil, &block);  on(:close, func, &block)   end
+    def on_ping(func = nil, &block);   on(:ping, func, &block)    end
+    def on_pong(func = nil, &block);   on(:pong, func, &block)    end
 
     # Called to immediately stop handling requests
     def stop!
@@ -224,7 +237,7 @@ module WebSocket
               break
             end
             size_words = rawsize.unpack('NN')
-            @logger.info size_words.inspect
+            @logger.debug size_words.inspect
             # append the integers for the full length
             payload_size = nil
             payload_size = (size_words[0] << 32) + size_words[1] unless size_words[0].nil? or size_words[1].nil?
@@ -237,7 +250,7 @@ module WebSocket
             @socket.close
             break
           end
-          @logger.info "Payload size: #{payload_size} B"
+          @logger.debug "Payload size: #{payload_size} B"
 
           # If the 'MASK' bit was set, then 4 bytes are provided to the server
           # to be used as an XOR mask for incoming bytes
@@ -361,14 +374,16 @@ module WebSocket
     #   :origin - the Origin to specify in the headers when connecting
     #   :headers - any additional non-required headers
     # @return [WebSocket::Client] when connection successfully established
-    def self.connect(host, port, opts = {})
-      logger = opts[:logger]
-      origin = opts[:origin]
-      ssl = opts[:ssl]
-      ssl_verify_mode = opts[:ssl_verify_mode]
-      path = opts[:path] || '/'
-      headers = opts[:headers] || []
-      user_agent = opts[:user_agent] || 'WebSocket::Client'
+    def self.connect(host, port, opts = {}, logger: nil, origin: nil, ssl: nil,
+                                            ssl_verify_mode: nil, path: nil,
+                                            headers: nil, user_agent: nil)
+      logger = logger || opts[:logger]
+      origin = origin || opts[:origin]
+      ssl = ssl || opts[:ssl]
+      ssl_verify_mode = ssl_verify_mode || opts[:ssl_verify_mode]
+      path = path || opts[:path] || '/'
+      headers = headers || opts[:headers] || []
+      user_agent = user_agent || opts[:user_agent] || 'WebSocket::Client'
 
       # establish the TCPSocket connection
       socket = TCPSocket.new(host, port.to_i)

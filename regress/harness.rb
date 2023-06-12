@@ -42,7 +42,7 @@ class Harness
       ssl_cert: @cert,
       ssl_key: @key
     }
-    @socket_server = WebSocket::Server.new(options)
+    @socket_server = WebSocket::Server.new(**options)
     @socket_server.run!
     @socket_server
   end
@@ -62,7 +62,7 @@ class Harness
 
   def connect_client(opts = {})
     Timeout::timeout(1) do
-      WebSocket::Client.connect(@host, @port, opts.merge(logger: make_logger))
+      WebSocket::Client.connect(@host, @port, **opts.merge(logger: make_logger))
     end
   end
 

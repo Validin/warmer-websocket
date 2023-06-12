@@ -36,14 +36,10 @@ ERROR   Socket closed unexpectedly during length transfer
 INFO    Received websocket key, establishing connection
 ERROR   Socket closed unexpectedly during length transfer
 INFO    Received websocket key, establishing connection
-INFO    Payload size: 65535 B
 ERROR   Socket closed unexpectedly during mask transfer
 INFO    Received websocket key, establishing connection
-INFO    Payload size: 1 B
 ERROR   Socket closed unexpectedly during mask transfer
 INFO    Received websocket key, establishing connection
-INFO    Payload size: 1 B
 ERROR   Socket closed unexpectedly during mask transfer
 INFO    Received websocket key, establishing connection
-INFO    Payload size: 1 B
 ERROR   Socket closed unexpectedly during message transfer

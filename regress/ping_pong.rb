@@ -15,7 +15,7 @@ Harness.run_test do
   client.serve!
 
   log 'Set a handler for receiving pongs on the client'
-  client.on(:pong) do |_c, payload|
+  client.on_pong do |_c, payload|
     log "Received pong with #{payload.string} as client"
     client_received = true
   end
@@ -34,7 +34,7 @@ Harness.run_test do
   scenario 'Send a ping from the server to the client'
 
   log 'Set a handler for receiving pongs on the server'
-  server.on(:pong) do |_c, payload|
+  server.on_pong do |_c, payload|
     log "Received pong with #{payload.string} as server"
     server_received = true
   end

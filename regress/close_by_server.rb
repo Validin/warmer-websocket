@@ -11,12 +11,12 @@ Harness.run_test do
   server = start_websocket_server
 
   log 'Set a handler for receiving close events from the server'
-  server.on(:close) do |_c, payload|
+  server.on_close do |_c, payload|
     log "Received close with #{payload.string.inspect} as server"
     server_received = true
   end
 
-  server.on(:ping) do |client|
+  server.on_ping do |client|
     client.send_frame(:close)
   end
 
@@ -24,7 +24,7 @@ Harness.run_test do
   client = connect_client
 
   log 'Set a handler for receiving close events from the client'
-  client.on(:close) do |_c, payload|
+  client.on_close do |_c, payload|
     log "Received close with #{payload.string.inspect} as client"
   end
 

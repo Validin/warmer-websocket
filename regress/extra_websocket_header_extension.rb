@@ -11,7 +11,7 @@ Harness.run_test do
   server = start_websocket_server
 
   log 'Set a handler for receiving server connect and disconnect events'
-  server.on(:client_connect) do |client|
+  server.on_client_connect do |client|
     log 'Server has connected to a client'
     log "Client path: #{client.path}"
     log "Client host: #{client.host}"
@@ -19,7 +19,7 @@ Harness.run_test do
     server_connected = true
   end
 
-  server.on(:client_disconnect) do |_client|
+  server.on_client_disconnect do |_client|
     log 'Server has disconnected from a client'
     server_disconnected = true
   end

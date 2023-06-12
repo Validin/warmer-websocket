@@ -8,12 +8,12 @@ Harness.run_test do
   server_disconnected = false
   log 'Start websocket server'
   server = start_websocket_server
-  server.on(:client_disconnect) do |_client|
+  server.on_client_disconnect do |_client|
     log 'Server has disconnected from a client'
     server_disconnected = true
   end
 
-  server.on(:text) do |_client, body|
+  server.on_text do |_client, body|
     log "Server received text from client: #{body.string.inspect}"
   end
 

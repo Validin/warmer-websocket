@@ -51,13 +51,14 @@ module WebSocket
     #   host: hostname from which to serve WebSockets
     #   port: port from which to serve WebSockets
     #   logger: logger override to use for log messages (defaults to STDOUT)
-    def initialize(opts = {})
-      @host = opts[:host]
-      @port = opts[:port]
-      @logger = opts[:logger]
-      @ssl = opts[:ssl]
-      @ssl_key = opts[:ssl_key]
-      @ssl_cert = opts[:ssl_cert]
+    def initialize(opts = {}, host: nil, port: nil, logger: nil, ssl: nil,
+                              ssl_key: nil, ssl_cert: nil)
+      @host = host || opts[:host]
+      @port = port || opts[:port]
+      @logger = logger || opts[:logger]
+      @ssl = ssl || opts[:ssl]
+      @ssl_key = ssl_key || opts[:ssl_key]
+      @ssl_cert = ssl_cert || opts[:ssl_cert]
       @client_handlers = Hash.new{|h, v| h[v] = []}
       @server_handlers = Hash.new{|h, v| h[v] = []}
       @clients = {}
@@ -85,6 +86,15 @@ module WebSocket
         @client_handlers[action] << func
       end
     end
+
+    # shortcuts
+    def on_text(func = nil, &block);   on(:text, func, &block)    end
+    def on_binary(func = nil, &block); on(:binary, func, &block)  end
+    def on_close(func = nil, &block);  on(:close, func, &block)   end
+    def on_ping(func = nil, &block);   on(:ping, func, &block)    end
+    def on_pong(func = nil, &block);   on(:pong, func, &block)    end
+    def on_client_connect(func = nil, &block); on(:client_connect, func, &block) end
+    def on_client_disconnect(func = nil, &block); on(:client_disconnect, func, &block) end
 
     # Starts the WebSocket server, spawns a new thread for every request
     def run!
