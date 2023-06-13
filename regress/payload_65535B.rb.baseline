@@ -18,5 +18,3 @@ Stop the client
 
 INFO    Listening on localhost:[WEBSOCKET_PORT]
 INFO    Received websocket key, establishing connection
-INFO    Payload size: 65535 B
-INFO    Payload size: 65535 B

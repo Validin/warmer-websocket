@@ -13,7 +13,7 @@ Harness.run_test(ssl: true,
   server = start_websocket_server
 
   log 'Set a handler for receiving text on the server'
-  server.on(:text) do |conn, payload|
+  server.on_text do |conn, payload|
     log "Received #{payload.string} as server"
     log 'Send text from the server back to the client'
     conn.send_frame(1, 'Hello!')
@@ -24,7 +24,7 @@ Harness.run_test(ssl: true,
   client = connect_client(ssl: true, ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE)
   client.serve!
   log 'Set a handler for receiving text on the client'
-  client.on(:text) do |_conn, payload|
+  client.on_text do |_conn, payload|
     log "Received #{payload.string} as client"
     client_received = true
   end

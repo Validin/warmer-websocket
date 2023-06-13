@@ -12,4 +12,3 @@ Server has disconnected from a client
 
 INFO    Listening on localhost:[WEBSOCKET_PORT]
 INFO    Received websocket key, establishing connection
-INFO    Payload size: 8192 B

@@ -23,13 +23,9 @@ Server has disconnected from a client
 
 INFO    Listening on localhost:[WEBSOCKET_PORT]
 INFO    Received websocket key, establishing connection
-INFO    Payload size: 3 B
 ERROR   Socket closed unexpectedly during message transfer
 INFO    Received websocket key, establishing connection
-INFO    Payload size: 3 B
 ERROR   Socket closed unexpectedly during message transfer
 INFO    Received websocket key, establishing connection
-INFO    Payload size: 3 B
 ERROR   Socket closed unexpectedly during message transfer
 INFO    Received websocket key, establishing connection
-INFO    Payload size: 3 B
